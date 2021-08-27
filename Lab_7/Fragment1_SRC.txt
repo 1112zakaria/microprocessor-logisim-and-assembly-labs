@@ -1,0 +1,54 @@
+   B    SkipOverVariables	; branch to SkipOverVariables
+
+   
+Arr_Size  DCD #3  ; Arr is an array of 3 words
+Arr
+   DCD  #20       ; first (0-th) element of Arr = 20
+   DCD  #-4       ; second (1-th) element of Arr = -4 
+   DCD  #0        ; third (2-th) element of Arr = 0
+
+SkipOverVariables
+   MOV  R2, Arr          ; Store the address of Arr in R2
+   LDR  R3, [ Arr_Size ] ; Load value addressed by Arr_size in Main Memory onto R3 (R3=3?)
+   CMP  R3, #0           ; Compare R3 with 0
+   BEQ  Done             ; If R3 equals 0, go to Done. Else, continue
+   SUB  R3, R3, #1       ; Subtract 1 from value in R3
+
+Loop   
+   LDR  R5, [R2, R3 ]    ; Fetch the Arr element stored in Main Memory addressed by [Arr + R3], store at R5
+   ADD  R5, R5, #10      ; Add 10 to the Arr element and store in R5
+   STR  R5, [R2, R3]     ; Store the modified Arr element back into Main Memory
+   SUB  R3, R3, #1       ; Decrement R3 by 1 <- Array index value
+   BPL  Loop             ; If E3 is positive or 0, Go to label Loop
+
+Done
+   DCD  #0xFFFFFFFF     ; breakpoint instruction
+
+
+// DO NOT PASTE ANYTHING BELOW
+PQ1:
+What is the purpose of this code fragment?
+-> To add 10 to each of the array's elements.
+
+PQ2:
+
+R2 = Arr;		// Array Pointer
+R3 = Arr_size;		// Array length
+
+// Potential problem? Adds + 3 to array pointer, accessing non-array element? Ask about this.
+while (R3 >= 0) {
+	R5 = *(R2 + R3);
+	R5 += 10;
+	*(R2 + R3) = R5;
+	R3--;
+
+PQ3:
+Number of instructions executed:
+	4 + 5 + 5 * 4 + 1 = 30 instructions
+NOTE: once again, I very likely made a mistake and added an extra loop cycle, so it should be 25 instead?
+Should be 21.
+
+
+PQ5:
+Based on what the assembler application is telling me, that would be 16 words of memory that the fragment occupies.
+This matches with my manual count of words of memory occupied based on the number of instructions written.
